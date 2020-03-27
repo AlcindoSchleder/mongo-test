@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div><a href="{% url 'home:movies' %}">Add New Movie&nbsp;<img src="{% static 'img/home/add.jpg' %}"></a></div>
+    {% if movies_list %}
+    <table>
+        <th>
+            <td>Movie Description</td>
+            <td>likes</td>
+            <td>dislikes</td>
+            <td>ranking</td>
+            <td>operations</td>
+        </th>
+        {% for movie in movies_list %}
+        <tr>
+            <td>{{ movie.dsc_movie }}</td>
+            <td>
+                {{ movie.likes }}&nbsp;
+                <a href="{% url 'home:category' %}" id="add_like" onclick="return addLikeMovie(this);">
+                    <img src="{% static 'home/img/positive.jpg' %}" />
+                </a>
+            </td>
+            <td>
+                {{ movie.dislikes }}&nbsp;
+                <a href="{% url 'home:category' %}" id="add_dislike" onclick="return addDislikeMovie(this);">
+                    <img src="{% static 'home/img/negative.jpg' %}">
+                </a>
+            </td>
+            <td>{{ movie.ranking }}</td>
+            <td>
+        		<a href="{% url 'home:movie' %}" id="add_movie">
+                    <img src="{% static 'img/home/edit.jpg' %}">
+                </a>
+            </td>
+            <td>
+        		<a href="{% url 'home:movie' %}" id="delete_movie">
+                    <img src="{% static 'img/home/delete.jpg' %}">
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}

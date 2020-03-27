@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <h2>New Movie</h2>
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+		<label for="book-author" class="control-label">Book Author</label>
+		{{form.fk_movies_category }}
+		<a href="{% url 'home:category' %}" id="add_author" onclick="return showAddPopup(this);">
+            <img src = "{% static '/images/icon-addlink.svg' %}">
+        </a>
+		<a id="{% url 'home:category' %}" style="cursor: pointer; cursor: hand;">
+            <img src = "{% static '/images/icon-changelink.svg' %}">
+        </a>
+		<br><br>
+		<label for="dsc_movie" class="control-label">Movie Description</label>
+		{{form.dsc_movie }}
+		<br><br>
+		<label for="qtd_likes" class="control-label">Likes</label>
+		{{form.qtd_likes }}
+		<br><br>
+		<label for="qtd_dislikes" class="control-label">Dislikes</label>
+		{{form.qtd_dislikes }}
+		<br><br>
+		<label for="ranking" class="control-label">Ranking</label>
+		{{form.ranking }}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+{% endblock %}
+
+{% block script %}
+	<script type="text/javascript" src="{% static 'home/movies.js' %}"></script>
+{% endblock %}
