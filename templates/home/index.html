@@ -1,46 +1,103 @@
 {% extends 'base.html' %}
 
-{% block content %}
-    <div><a href="{% url 'home:movies' %}">Add New Movie&nbsp;<img src="{% static 'img/home/add.jpg' %}"></a></div>
-    {% if movies_list %}
-    <table>
-        <th>
-            <td>Movie Description</td>
-            <td>likes</td>
-            <td>dislikes</td>
-            <td>ranking</td>
-            <td>operations</td>
-        </th>
-        {% for movie in movies_list %}
-        <tr>
-            <td>{{ movie.dsc_movie }}</td>
-            <td>
-                {{ movie.likes }}&nbsp;
-                <a href="{% url 'home:category' %}" id="add_like" onclick="return addLikeMovie(this);">
-                    <img src="{% static 'home/img/positive.jpg' %}" />
-                </a>
-            </td>
-            <td>
-                {{ movie.dislikes }}&nbsp;
-                <a href="{% url 'home:category' %}" id="add_dislike" onclick="return addDislikeMovie(this);">
-                    <img src="{% static 'home/img/negative.jpg' %}">
-                </a>
-            </td>
-            <td>{{ movie.ranking }}</td>
-            <td>
-        		<a href="{% url 'home:movie' %}" id="add_movie">
-                    <img src="{% static 'img/home/edit.jpg' %}">
-                </a>
-            </td>
-            <td>
-        		<a href="{% url 'home:movie' %}" id="delete_movie">
-                    <img src="{% static 'img/home/delete.jpg' %}">
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-        <p>There are no books in the library.</p>
-    {% endif %}
+{% load static %}
+
+{% block styles %}
+	<link rel="stylesheet" href="{% static 'css/home/index.css' %}?version=2" >
 {% endblock %}
+
+{%block title %}Django MongoDB CRUD{% endblock %}
+{%block pagetitle %}List of Movies{% endblock %}
+    {% block content %}
+        <div class="row">
+            <div class="col-12 subtitle text-center">
+                <a href="{% url 'home:movies' %}">
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-2">
+                            Add New Movie
+                        </div>
+                        <div class="col-1">
+                            <icon class="fas fa-plus btn btn-outline-success"></icon>
+                        </div>
+                        <div class="col-3"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% if movies_list %}
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10 list-items">
+                <table>
+                    <tr class="text-center">
+                        <th class="ml-4 mr-4">ID</th>
+                        <th class="ml-4 mr-4">Movie Description</th>
+                        <th class="ml-4 mr-4">likes</th>
+                        <th class="ml-4 mr-4">dislikes</th>
+                        <th class="ml-4 mr-4">ranking</th>
+                        <th class="ml-4 mr-4">operations</th>
+                    </tr>
+                    {% for movie in movies_list %}
+                    <tr>
+                        <td>{{ movie.id }}</td>
+                        <td><a data-link="{% url 'home:movies' %}" href="">{{ movie.dsc_movie }}</a></td>
+                        <td>
+                            {{ movie.qtd_likes }}
+                        </td>
+                        <td>
+                            {{ movie.qtd_dislikes }}
+                        </td>
+                        <td>{{ movie.ranking }}</td>
+                        <td>
+                            <icon data-link="{% url 'home:category' %}" class="far fa-thumbs-up p-2 ilike mr-1"></icon>
+                            <icon data-link="{% url 'home:category' %}" class="far fa-thumbs-down p-2 idislike mr-1"></icon>
+                            <icon data-link="{% url 'home:movies' %}" class="far fa-trash-alt idelete-movie p-2"></icon>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        {% if is_paginated %}
+        <div class="row text-center mt-2">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link" >&laquo;</span>
+                        </li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="page-item active">
+                                <span class="page-link" >{{ i }} <span class="sr-only">(current)</span></span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a  class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        {% endif %}
+        {% else %}
+            <p>There are no books in the library.</p>
+        {% endif %}
+    {% endblock %}

@@ -24,6 +24,11 @@ class MoviesForm(forms.ModelForm):
 
 class MoviesCategoryForm(forms.Form):
 
+    dsc_category = forms.CharField(label='Description')
+    sum_likes = forms.IntegerField(label='Likes')
+    sum_dislikes = forms.IntegerField(label='Dislikes')
+    ranking = forms.DecimalField(max_digits=11, decimal_places=2, label='Ranking')
+
     class Meta:
         model = MoviesCategory
         fields = ('dsc_category',)

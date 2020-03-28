@@ -1,0 +1,25 @@
+/*
+    Theme Name: i-CityDjangoMongo
+    Author: Alcindo Schleder
+    Author URL: https://icity.net.br
+*/
+
+/* Content
+---------------------------------*/
+/* Main Page */
+.edit-category {
+	color: orange;
+}
+.add-category {
+	color: green;
+}
+.add-category,
+.edit-category {
+    cursor: pointer;
+	font-size: 1rem;
+}
+.add-category:hover,
+.edit-category:hover {
+	color: #fff;
+	border: 1px outset #fff;
+}

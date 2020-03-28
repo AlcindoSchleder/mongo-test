@@ -2,34 +2,88 @@
 
 {% load static %}
 
-{% block content %}
-    <h2>New Movie</h2>
-    <form method="POST" class="post-form">
-        {% csrf_token %}
-		<label for="book-author" class="control-label">Book Author</label>
-		{{form.fk_movies_category }}
-		<a href="{% url 'home:category' %}" id="add_author" onclick="return showAddPopup(this);">
-            <img src = "{% static '/images/icon-addlink.svg' %}">
-        </a>
-		<a id="{% url 'home:category' %}" style="cursor: pointer; cursor: hand;">
-            <img src = "{% static '/images/icon-changelink.svg' %}">
-        </a>
-		<br><br>
-		<label for="dsc_movie" class="control-label">Movie Description</label>
-		{{form.dsc_movie }}
-		<br><br>
-		<label for="qtd_likes" class="control-label">Likes</label>
-		{{form.qtd_likes }}
-		<br><br>
-		<label for="qtd_dislikes" class="control-label">Dislikes</label>
-		{{form.qtd_dislikes }}
-		<br><br>
-		<label for="ranking" class="control-label">Ranking</label>
-		{{form.ranking }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
+{% block styles %}
+	<link rel="stylesheet" href="{% static 'css/home/movies.css' %}?version=2" >
 {% endblock %}
 
+{%block title %}Django MongoDB CRUD{% endblock %}
+{%block pagetitle %}Register Movies{% endblock %}
+
+	{% block content %}
+		<div class="row border border-white">
+			<div class="center-left col-3"></div>
+			<div class="col-6">
+				<div class="row">
+					<div class="col-12 text-center">
+						<div class="subtitle">
+							<h3>New Movie</h3>
+						</div>
+					</div>
+				</div>
+				<form method="POST" class="post-form">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-4">
+							<label for="fk_movies_category" class="control-label">Movie Category</label>
+						</div>
+						<div class="col-8">
+							{{form.fk_movies_category }}
+							<a data-link="{% url 'home:category' %}" id="add-category">
+								<icon class="fas fa-plus ml-3 mr-2 p-1 add-category"></icon>
+							</a>
+							<a data-link="{% url 'home:category' %}" id="edit-category">
+								<icon class="fas fa-pencil-alt p-1 edit-category"></icon>
+							</a>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-4">
+							<label for="dsc_movie" class="control-label">Movie Description</label>
+						</div>
+						<div class="col-8">
+							{{form.dsc_movie }}
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-4">
+							<label for="qtd_likes" class="control-label">Likes</label>
+						</div>
+						<div class="col-8">
+							{{form.qtd_likes }}
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-4">
+							<label for="qtd_dislikes" class="control-label">Dislikes</label>
+						</div>
+						<div class="col-8">
+							{{form.qtd_dislikes }}
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-4">
+							<label for="ranking" class="control-label">Ranking</label>
+						</div>
+						<div class="col-8">
+							{{form.ranking }}
+						</div>
+					</div>
+
+					<div class="row mb-2">
+						<div class="col-12 text-center">
+							<button type="submit" class="save btn btn-outline-primary">Save</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="center-right col-3"></div>
+		</div>
+	{% endblock %}
+
 {% block script %}
-	<script type="text/javascript" src="{% static 'home/movies.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/home/movies.js' %}"></script>
 {% endblock %}
