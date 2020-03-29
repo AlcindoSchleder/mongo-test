@@ -24,17 +24,17 @@ class HomeMoviesView(DeletionMixin, UpdateMixin, TemplateView):
     template_name = 'home/movies.html'
     success_url = 'home:index'
     http_method_names = ['get', 'post', 'delete', 'put', 'path']
+    pk = None
 
-    @staticmethod
-    def initial_data(pk=None):
+    def initial_data(self):
         data = {
             'dsc_movie': '',
             'qtd_likes': 0,
             'qtd_dislikes': 0,
             'ranking': 0.00
         }
-        if pk is not None:
-            instance = Movies.objects.get(id=pk)
+        if self.pk is not None:
+            instance = Movies.objects.get(id=self.pk)
             data['fk_movies_category'] = instance.fk_movies_category
             data['dsc_movie'] = instance.dsc_movie
             data['qtd_likes'] = instance.qtd_likes
@@ -43,14 +43,19 @@ class HomeMoviesView(DeletionMixin, UpdateMixin, TemplateView):
         return data
 
     def get(self, request, pk=None, *args, **kwargs):
-        init_data = self.initial_data(pk)
+        self.pk = pk
+        init_data = self.initial_data()
         form = self.form_class(init_data)
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'category': ''})
 
     def post(self, request, *args, **kwargs):
+        self.pk = kwargs.get('pk')
         form = self.form_class(request.POST or None)
         if form.is_valid():
-            instance = Movies()
+            if self.pk is None:
+                instance = Movies()
+            else:
+                instance = Movies.objects.get(pk=self.pk)
             instance.fk_movies_category = form.cleaned_data['fk_movies_category']
             instance.dsc_movie = form.cleaned_data['dsc_movie']
             instance.qtd_likes = form.cleaned_data['qtd_likes']
@@ -90,15 +95,36 @@ class HomeMoviesView(DeletionMixin, UpdateMixin, TemplateView):
 class MoviesCategoryView(TemplateView):
     template_name = 'home/category.html'
     form_class = MoviesCategoryForm
+    pk = None
+
+    def initial_data(self):
+        data = {
+            'dsc_category': '',
+            'sum_likes': 0,
+            'sum_dislikes': 0,
+            'ranking': 0.00
+        }
+        if self.pk is not None:
+            instance = MoviesCategory.objects.get(id=self.pk)
+            data['dsc_category']: instance.dsc_category
+            data['sum_likes']: instance.sum_likes
+            data['sum_dislikes']: instance.sum_dislikes
+            data['ranking']: instance.ranking
+        return data
 
     def get(self, request, pk=None, *args, **kwargs):
-        form = self.form_class(self.initial_data(pk))
+        self.pk = pk
+        form = self.form_class(self.initial_data())
         return render(request, self.template_name, {"form": form})
 
     def post(self, request, *args, **kwargs):
+        self.pk = kwargs.get('pk')
         form = self.form_class(request.POST or None)
         if form.is_valid():
-            instance = MoviesCategory()
+            if self.pk is None:
+                instance = MoviesCategory()
+            else:
+                instance = MoviesCategory.objects.get(pk=self.pk)
             instance.dsc_category = form.cleaned_data['dsc_category']
             instance.sum_likes = form.cleaned_data['sum_likes']
             instance.sum_dislikes = form.cleaned_data['sum_dislikes']
@@ -109,30 +135,6 @@ class MoviesCategoryView(TemplateView):
                 f'"{instance.pk}", "{instance}", "#fk_movies_category");</script>'
             )
         return render(request, self.template_name, {"form": form})
-
-    @staticmethod
-    def initial_data(pk=None):
-        if pk is None:
-            return {
-                'dsc_category': '',
-                'sum_likes': 0,
-                'sum_dislikes': 0,
-                'ranking': 0.00
-            }
-        return MoviesCategory.objects.get(id=pk)
-
-    def edit_category(self, request, pk):
-        if request is not None and len(request.POST) > 0:
-            form = self.form_class(request.POST)
-            if form.is_valid():
-                instance = form.save()
-                # Change the value of the "#fk_movies_category". This is the element id in the form
-                return HttpResponse(
-                    '<script>MoviesEvents.closeWindow(window, ' +
-                    f'"{instance.pk}", "{instance}", "#fk_movies_category");</script>')
-        else:
-            form = self.form_class(self.initial_data(pk))
-            return render(request, self.template_name, {"form": form})
 
     @csrf_exempt
     def get_category_id(self, request, **kwargs):

@@ -40,6 +40,7 @@ var IndexEvents = function () {
         });
     };
     var sendAjaxOverride = function (url, method, msg = '', urlRedirect = '/') {
+        href = window.location.href
         $.ajaxSetup({
              beforeSend: function(xhr, settings) {
                  function getCookie(name) {
@@ -68,7 +69,7 @@ var IndexEvents = function () {
             type: 'POST',
             success: function () {
                 if (msg) alert(msg);
-                window.location.href = urlRedirect
+                window.location.href = href
             },
             headers: { 'x-MethodOverride': method }
         });
