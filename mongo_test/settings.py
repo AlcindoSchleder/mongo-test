@@ -38,6 +38,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'mongo_test.app_middleware.HttpPostConvertMiddleware',
 ]
 
 ROOT_URLCONF = 'mongo_test.urls'

@@ -57,8 +57,8 @@ def movies_post_save(instance, created, **kwargs):
     if not created:
         raise Exception('PostSave: Error on save data, table Movie Votes can not be edited!')
     try:
-        category = MoviesCategory.objects.get(instance.fk_movies_category.id)
-        movie = Movies.objects.get(instance.fk_movies.id)
+        category = MoviesCategory.objects.get(pk=instance.fk_movies_category_id)
+        movie = Movies.objects.get(pk=instance.fk_movies_id)
     except ObjectDoesNotExist:
         raise Exception(f'PostSave: Error on get categories or movies! {ObjectDoesNotExist}')
     vote = instance.vote_movie if instance.vote_movie > 0 else instance.vote_movie * -1

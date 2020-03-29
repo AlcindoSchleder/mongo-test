@@ -12,63 +12,66 @@
 
 var IndexEvents = function () {
 
-    var car_id = $('#car_id').val();
-    var display_id = $('#display_id').val();
-
-    var wsGroup = null
-    var wsMember = null
-
-    var set_display_controls = function (message) {
-        console.log('setting display controls');
-        if ((message == 'display_enable') && (!$('.shadow-page').hasClass('d-none')))
-            $('.shadow-page').addClass('d-none');
-        if ((message == 'display_disable') && ($('.shadow-page').hasClass('d-none')))
-            $('.shadow-page').removeClass('d-none');
-    }
-    var checkCommands = function(e) {
-        let data = JSON.parse(e.data);
-        console.log('receiving: ', data);
-        console.log('checking command:', data.command);
-        console.log('checking message:', data.message);
-        if (data.command == 'control')
-            set_display_controls(data.message);
-        if (data.command == 'setbox') {
-            console.log('setting display box code');
-            $('.box_code').html(data.message);
-        }
-    }
-    var onCloseSocket = function (e) {
-        console.error('Display socket closed unexpectedly', e);
-    }
-    var socketConnect = function(socket, url) {
-        console.log('Connecting to:', url)
-        socket = new WebSocket(url);
-        socket.onmessage = checkCommands;
-        socket.onclose = onCloseSocket;
-    }
     var documentEvents = function () {
-        socketConnect(wsGroup, 'ws://' + window.location.host + '/ws/car/' + car_id + '/')
-        socketConnect(wsMember, 'ws://' + window.location.host + '/ws/display/' + car_id + '/' + display_id + '/')
-        $('.btnTeste').on('click', (e) => {
-            $('.shadow-page').removeClass('d-none');
+        $('.edit-movie').click(function (e) {
+            e.preventDefault();
+            url = $(this).attr('data-link');
+            window.location.href = url
         })
+        $('.idelete-movie').click(function (e) {
+            e.preventDefault();
+            url = $(this).attr('data-link');
+            console.log('url para exclusão do filme: ', url)
+            if (BaseEvents.Confirm('Did You wish delete this record?')) {
+                sendAjaxOverride(url, 'DELETE', 'Record deleted successfully!')
+            }
+        });
+        $('.ilike').click(function (e) {
+            e.preventDefault();
+            url = $(this).attr('data-link');
+            console.log('url para atualizar like do filme: ', url)
+            sendAjaxOverride(url, 'PUT')
+        });
+        $('.idislike').click(function (e) {
+            e.preventDefault();
+            url = $(this).attr('data-link');
+            console.log('url para atualizar dislike do filme: ', url)
+            sendAjaxOverride(url, 'PATH')
+        });
     };
-    var handleDynamicLinks = function () {
-    };
-    var serializerJson = function(form) {
-        let js = {};
-        let a = $(form).serializeArray();
-        $.each(a, function() {
-           if (js[this.name]) {
-               if (!js[this.name].push) {
-                   js[this.name] = [js[this.name]];
-               };
-               js[this.name].push(this.value || '');
-           } else {
-               js[this.name] = this.value || '';
-           };
-       });
-       return js;
+    var sendAjaxOverride = function (url, method, msg = '', urlRedirect = '/') {
+        $.ajaxSetup({
+             beforeSend: function(xhr, settings) {
+                 function getCookie(name) {
+                     var cookieValue = null;
+                     if (document.cookie && document.cookie != '') {
+                         var cookies = document.cookie.split(';');
+                         for (var i = 0; i < cookies.length; i++) {
+                             var cookie = jQuery.trim(cookies[i]);
+                             // Does this cookie string begin with the name we want?
+                             if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                 break;
+                             }
+                         }
+                     }
+                     return cookieValue;
+                 }
+                 if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     // Only send the token to relative URLs i.e. locally.
+                     xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                 }
+             }
+        });
+        $.ajax({
+            url: url,
+            type: 'POST',
+            success: function () {
+                if (msg) alert(msg);
+                window.location.href = urlRedirect
+            },
+            headers: { 'x-MethodOverride': method }
+        });
     };
     var hidePage = function (page, url) {
     };

@@ -5,7 +5,7 @@ from .models import Movies, MoviesCategory
 
 class MoviesForm(forms.ModelForm):
     fk_movies_category = forms.ModelChoiceField(
-        queryset=MoviesCategory.objects.all(), label='Category', help_text='Category'
+        queryset=MoviesCategory.objects.all(), label='Category'
     )
     dsc_movie = forms.CharField(
         label='Movie Description', help_text='Movie Description'

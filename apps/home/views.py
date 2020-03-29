@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
 from django.http import HttpResponse
+from django.views.generic.edit import DeletionMixin
 from django.views.generic import TemplateView, ListView
-from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 from .forms import MoviesForm, MoviesCategoryForm
 from .models import MoviesCategory, Movies, MoviesVotes
-from django.views.decorators.csrf import csrf_exempt
+from .mixin import UpdateMixin
 
 
 class HomeView(ListView):
@@ -17,23 +19,32 @@ class HomeView(ListView):
     queryset = Movies.objects.order_by('fk_movies_category', 'ranking')
 
 
-class HomeMoviesView(TemplateView):
+class HomeMoviesView(DeletionMixin, UpdateMixin, TemplateView):
     form_class = MoviesForm
     template_name = 'home/movies.html'
+    success_url = 'home:index'
+    http_method_names = ['get', 'post', 'delete', 'put', 'path']
 
     @staticmethod
-    def initial_data(pk = None):
-        if pk is None:
-            return {
-                'dsc_movie': '',
-                'qtd_likes': 0,
-                'qtd_dislikes': 0,
-                'ranking': 0.00
-            }
-        return MoviesCategory.objects.get(id=pk)
+    def initial_data(pk=None):
+        data = {
+            'dsc_movie': '',
+            'qtd_likes': 0,
+            'qtd_dislikes': 0,
+            'ranking': 0.00
+        }
+        if pk is not None:
+            instance = Movies.objects.get(id=pk)
+            data['fk_movies_category'] = instance.fk_movies_category
+            data['dsc_movie'] = instance.dsc_movie
+            data['qtd_likes'] = instance.qtd_likes
+            data['qtd_dislikes'] = instance.qtd_dislikes
+            data['ranking'] = instance.ranking
+        return data
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(self.initial_data())
+    def get(self, request, pk=None, *args, **kwargs):
+        init_data = self.initial_data(pk)
+        form = self.form_class(init_data)
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
@@ -46,23 +57,42 @@ class HomeMoviesView(TemplateView):
             instance.qtd_dislikes = form.cleaned_data['qtd_dislikes']
             instance.ranking = form.cleaned_data['ranking']
             instance.save()
-            return redirect('home:index')
+            return redirect(self.success_url)
         return render(request, self.template_name, {"form": form})
+
+    def delete(self, request, pk=None, *args, **kwargs):
+        if pk is not None:
+            movie = Movies.objects.get(id=pk)
+            movie.delete()
+        return redirect(self.success_url)
+
+    def put(self, request, pk=None, *args, **kwargs):
+        if pk is not None:
+            movie = Movies.objects.get(pk=pk)
+            category = MoviesCategory.objects.get(pk=movie.fk_movies_category_id)
+            vote = MoviesVotes(
+                fk_movies=movie, fk_movies_category=category, vote_movie=1
+            )
+            vote.save()
+        return redirect(self.success_url)
+
+    def path(self, request, pk=None, *args, **kwargs):
+        if pk is not None:
+            movie = Movies.objects.get(pk=pk)
+            category = MoviesCategory.objects.get(pk=movie.fk_movies_category_id)
+            vote = MoviesVotes(
+                fk_movies=movie, fk_movies_category=category, vote_movie=-1
+            )
+            vote.save()
+        return redirect(self.success_url)
 
 
 class MoviesCategoryView(TemplateView):
     template_name = 'home/category.html'
     form_class = MoviesCategoryForm
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(self.initial_data())
-        # if form.is_valid():
-        #     instance = form.save()
-        #     # Change the value of the "#id_author". This is the element id in the form
-        #     return HttpResponse(
-        #         '<script>MoviesEvents.closeWindow(window, ' +
-        #         f'"{instance.pk}", "{instance}", "#fk_movies_category");</script>'
-        #     )
+    def get(self, request, pk=None, *args, **kwargs):
+        form = self.form_class(self.initial_data(pk))
         return render(request, self.template_name, {"form": form})
 
     def post(self, request, *args, **kwargs):

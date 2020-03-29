@@ -41,7 +41,11 @@
                     {% for movie in movies_list %}
                     <tr>
                         <td>{{ movie.id }}</td>
-                        <td><a data-link="{% url 'home:movies' %}" href="">{{ movie.dsc_movie }}</a></td>
+                        <td>
+                            <a class="edit-movie" data-link="{% url 'home:movies' %}{{ movie.id }}" href="">
+                                {{ movie.dsc_movie }}
+                            </a>
+                        </td>
                         <td>
                             {{ movie.qtd_likes }}
                         </td>
@@ -50,9 +54,9 @@
                         </td>
                         <td>{{ movie.ranking }}</td>
                         <td>
-                            <icon data-link="{% url 'home:category' %}" class="far fa-thumbs-up p-2 ilike mr-1"></icon>
-                            <icon data-link="{% url 'home:category' %}" class="far fa-thumbs-down p-2 idislike mr-1"></icon>
-                            <icon data-link="{% url 'home:movies' %}" class="far fa-trash-alt idelete-movie p-2"></icon>
+                            <icon data-link="{% url 'home:movies' %}{{ movie.id }}" class="far fa-thumbs-up p-2 ilike mr-1"></icon>
+                            <icon data-link="{% url 'home:movies' %}{{ movie.id }}" class="far fa-thumbs-down p-2 idislike mr-1"></icon>
+                            <icon data-link="{% url 'home:movies' %}{{ movie.id }}" class="far fa-trash-alt idelete-movie p-2"></icon>
                         </td>
                     </tr>
                     {% endfor %}
@@ -100,4 +104,7 @@
         {% else %}
             <p>There are no books in the library.</p>
         {% endif %}
+    {% endblock %}
+    {% block script %}
+	<script type="text/javascript" src="{% static 'js/home/index.js' %}"></script>
     {% endblock %}
