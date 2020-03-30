@@ -1,8 +1,7 @@
 /*
-    Theme Name: i-CitySmartCharger
-    Theme URL: https://icity.com.br/themes/smartcharger
+    Theme Name: i-CityDjangoMongo
     Author: Alcindo Schleder
-    Author URL: https://icity.com.br
+    Author URL: https://icity.net.br
 */
 
 /* CSS Document - Reset all medias
@@ -68,12 +67,12 @@ header .sub-title {
 /* Main Page */
 .main-page {
     height: 65vh;
-    width: 100vw;
+    width: 99vw;
 }
 .main-page .title,
 .main-page .subtitle {
 	text-transform: uppercase;
-    padding: 1rem 1rem;
+    padding: 1rem 0.5rem;
 }
 
 /* Footer

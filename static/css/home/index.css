@@ -7,8 +7,12 @@
 /* Content
 ---------------------------------*/
 /* Main Page */
+.main-page {
+    background-color: rgba(40, 30, 0, 0.4);
+}
 table {
     font-size: 1.2rem
+    width: 100%
 }
 table th {
     border: 1px solid #63552f;
@@ -24,6 +28,10 @@ table tr {
 table td {
     padding-left: 1rem;
     padding-right: 1rem;
+}
+table .category-col {
+    font-weight: 200;
+	text-transform: uppercase;
 }
 .ilike  {
     color: green;

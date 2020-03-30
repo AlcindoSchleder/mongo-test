@@ -43,17 +43,15 @@
                     {% regroup movies_list by fk_movies_category.dsc_category as category_list %}
                     {% for category, movies in category_list %}
                     <tr>
-                        <td>
-                            <a class="edit-movie" data-link="{% url 'home:category' %}{{ movie.fk_movies_category.id }}" href="">
-                                {{ category }}
-                            </a>
+                        <td class="text-warning category-col" width="200">
+                            {{ category }}
                         </td>
                         <td>
                             {{ movies.0.fk_movies_category.ranking }}
                         </td>
                         {% for movie in movies %}
                             <td>{{ movie.id }}</td>
-                            <td>
+                            <td width="500">
                                 <a class="edit-movie" data-link="{% url 'home:movies' %}{{ movie.id }}" href="">
                                     {{ movie.dsc_movie }}
                                 </a>
@@ -65,9 +63,9 @@
                                 {{ movie.qtd_dislikes }}
                             </td>
                             <td>{{ movie.ranking }}</td>
-                            <td>
-                                <icon data-link="{% url 'home:movies' %}{{ movie.id }}" class="far fa-thumbs-up p-2 ilike mr-1"></icon>
-                                <icon data-link="{% url 'home:movies' %}{{ movie.id }}" class="far fa-thumbs-down p-2 idislike mr-1"></icon>
+                            <td class="p-0 m-0 text-center" width="120">
+                                <icon data-link="{% url 'home:movies' %}{{ movie.id }}" class="far fa-thumbs-up p-2 ilike"></icon>
+                                <icon data-link="{% url 'home:movies' %}{{ movie.id }}" class="far fa-thumbs-down p-2 idislike"></icon>
                                 <icon data-link="{% url 'home:movies' %}{{ movie.id }}" class="far fa-trash-alt idelete-movie p-2"></icon>
                             </td>
                         </tr>

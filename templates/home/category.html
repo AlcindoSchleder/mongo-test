@@ -49,7 +49,9 @@
 					</div>
 					<div class="row mb-2">
 						<div class="col-12 text-center">
-							<button id="btn-submit" class="btn btn-outline-primary">Save</button>
+							<button id="btn-submit" class="btn btn-outline-primary">
+								<icon class="fas fa-database">&nbsp;Save&nbsp;</icon>
+							</button>
 						</div>
 					</div>
 				</form>
@@ -59,16 +61,14 @@
 	{% endblock %}
 {% block script %}
 	<script type="text/javascript">
+		var onClose = function (e) {
+
+		}
+
 		$(document).ready(function() {
-			console.log('building evento o click');
 			$('#btn-submit').click(function (e) {
-				alert('Clicouoooooo....');
 				e.preventDefault();
-				alert('enviando form');
 				$('#category-form').submit();
-				alert('fechando a janela');
-				window.close();
-				alert('janela fechada');
 				return False;
 			});
 		});

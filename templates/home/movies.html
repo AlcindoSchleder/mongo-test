@@ -10,7 +10,7 @@
 {%block pagetitle %}Register Movies{% endblock %}
 
 	{% block content %}
-		<div class="row border border-white">
+		<div class="row">
 			<div class="center-left col-3"></div>
 			<div class="col-6">
 				<div class="row">
@@ -22,7 +22,7 @@
 				</div>
 				<form method="POST" class="post-form">
 					{% csrf_token %}
-					<div class="row">
+					<div class="row mb-2">
 						<div class="col-4">
 							<label for="fk_movies_category" class="control-label">Movie Category</label>
 						</div>
@@ -37,7 +37,7 @@
 						</div>
 					</div>
 
-					<div class="row">
+					<div class="row mb-2">
 						<div class="col-4">
 							<label for="dsc_movie" class="control-label">Movie Description</label>
 						</div>
@@ -46,7 +46,7 @@
 						</div>
 					</div>
 
-					<div class="row">
+					<div class="row mb-2">
 						<div class="col-4">
 							<label for="qtd_likes" class="control-label">Likes</label>
 						</div>
@@ -55,7 +55,7 @@
 						</div>
 					</div>
 
-					<div class="row">
+					<div class="row mb-2">
 						<div class="col-4">
 							<label for="qtd_dislikes" class="control-label">Dislikes</label>
 						</div>
@@ -64,7 +64,7 @@
 						</div>
 					</div>
 
-					<div class="row">
+					<div class="row mb-2">
 						<div class="col-4">
 							<label for="ranking" class="control-label">Ranking</label>
 						</div>
@@ -75,7 +75,12 @@
 
 					<div class="row mb-2">
 						<div class="col-12 text-center">
-							<button type="submit" class="save btn btn-outline-primary">Save</button>
+							<button class="btn-back btn btn-outline-warning mr-5">
+								<icon class="fas fa-home">&nbsp;Home&nbsp;</icon>
+							</button>
+							<button type="submit" class="btn-save btn btn-outline-primary">
+								<icon class="fas fa-database">&nbsp;Save&nbsp;</icon>
+							</button>
 						</div>
 					</div>
 				</form>

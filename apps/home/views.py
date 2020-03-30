@@ -15,8 +15,7 @@ class HomeView(ListView):
     template_name = 'home/index.html'
     model = Movies
     paginate_by = 8
-    # context_object_name = 'movies'
-    queryset = Movies.objects.order_by('fk_movies_category', 'ranking')
+    queryset = Movies.objects.order_by('-fk_movies_category__ranking', '-ranking')
 
 
 class HomeMoviesView(DeletionMixin, UpdateMixin, TemplateView):
@@ -46,7 +45,7 @@ class HomeMoviesView(DeletionMixin, UpdateMixin, TemplateView):
         self.pk = pk
         init_data = self.initial_data()
         form = self.form_class(init_data)
-        return render(request, self.template_name, {'form': form, 'category': ''})
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
         self.pk = kwargs.get('pk')
@@ -106,10 +105,10 @@ class MoviesCategoryView(TemplateView):
         }
         if self.pk is not None:
             instance = MoviesCategory.objects.get(id=self.pk)
-            data['dsc_category']: instance.dsc_category
-            data['sum_likes']: instance.sum_likes
-            data['sum_dislikes']: instance.sum_dislikes
-            data['ranking']: instance.ranking
+            data['dsc_category'] = instance.dsc_category
+            data['sum_likes'] = instance.sum_likes
+            data['sum_dislikes'] = instance.sum_dislikes
+            data['ranking'] = instance.ranking
         return data
 
     def get(self, request, pk=None, *args, **kwargs):
@@ -131,16 +130,7 @@ class MoviesCategoryView(TemplateView):
             instance.ranking = form.cleaned_data['ranking']
             instance.save()
             return HttpResponse(
-                '<script>closeWindow(window, ' +
-                f'"{instance.pk}", "{instance}", "#fk_movies_category");</script>'
+                '<script>opener.MoviesEvents.closeWindow(window, ' +
+                f'"{instance.pk}", "{instance}", "#id_fk_movies_category");</script>'
             )
         return render(request, self.template_name, {"form": form})
-
-    @csrf_exempt
-    def get_category_id(self, request, **kwargs):
-        if request.is_ajax():
-            dsc_category = request.GET['dsc_category']
-            category_id = MoviesCategory.objects.get(name=dsc_category).id
-            data = {'category_id': category_id}
-            return HttpResponse(json.dumps(data), content_type='application/json')
-        return HttpResponse("/")

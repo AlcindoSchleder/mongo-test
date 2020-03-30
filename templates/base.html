@@ -25,13 +25,13 @@
 			{% include 'header.html' %}
 		{% endblock %}
 
-			<!-- start content -->
-			<div class="main-page container">
-				<h3 class="title text-center">{%block pagetitle %}Main Page{% endblock %}</h3>
-				{% block content %}
-				{% endblock %}
-			</div>
-			<!-- end content -->
+		<!-- start content -->
+		<div class="main-page">
+			<h3 class="title text-center">{%block pagetitle %}Main Page{% endblock %}</h3>
+			{% block content %}
+			{% endblock %}
+		</div>
+		<!-- end content -->
 
 		{% block footer %}
 			{% include 'footer.html' %}

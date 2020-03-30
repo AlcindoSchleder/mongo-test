@@ -21,7 +21,6 @@ var IndexEvents = function () {
         $('.idelete-movie').click(function (e) {
             e.preventDefault();
             url = $(this).attr('data-link');
-            console.log('url para exclusão do filme: ', url)
             if (BaseEvents.Confirm('Did You wish delete this record?')) {
                 sendAjaxOverride(url, 'DELETE', 'Record deleted successfully!')
             }
@@ -29,13 +28,11 @@ var IndexEvents = function () {
         $('.ilike').click(function (e) {
             e.preventDefault();
             url = $(this).attr('data-link');
-            console.log('url para atualizar like do filme: ', url)
             sendAjaxOverride(url, 'PUT')
         });
         $('.idislike').click(function (e) {
             e.preventDefault();
             url = $(this).attr('data-link');
-            console.log('url para atualizar dislike do filme: ', url)
             sendAjaxOverride(url, 'PATH')
         });
     };
