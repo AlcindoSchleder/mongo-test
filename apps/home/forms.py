@@ -19,7 +19,6 @@ class MoviesForm(forms.ModelForm):
     class Meta:
         model = Movies
         fields = ('fk_movies_category', 'dsc_movie')
-        read_only = ('qtd_likes', 'qtd_dislikes', 'ranking')
 
 
 class MoviesCategoryForm(forms.Form):
@@ -32,4 +31,4 @@ class MoviesCategoryForm(forms.Form):
     class Meta:
         model = MoviesCategory
         fields = ('dsc_category',)
-        read_only = ('qtd_likes', 'qtd_dislikes', 'ranking')
+        exclude = ('qtd_likes', 'qtd_dislikes', 'ranking')
